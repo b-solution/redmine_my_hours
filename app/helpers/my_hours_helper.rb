@@ -1,0 +1,2 @@
+module MyHoursHelper
+end
