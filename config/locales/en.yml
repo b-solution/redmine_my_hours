@@ -1,3 +1,4 @@
 # English strings go here for Rails i18n
 en:
   my_hours: My hours
+  field_closed_on_date: Closed on
