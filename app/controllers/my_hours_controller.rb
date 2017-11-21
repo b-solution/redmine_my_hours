@@ -25,10 +25,25 @@ class MyHoursController < ApplicationController
   accept_api_auth :index, :show, :create, :update, :destroy
 
   def index
-    params.merge!({"set_filter" => "1", "sort"=>"id:desc", "f"=>["status_id", ""],
-                   "op"=>{"status_id"=>"c"}, "c"=>["status", "subject", "spent_hours"],
-                   "group_by"=>"closed_on_date", "t"=>["spent_hours", ""]})
 
+
+    if params[:group_name]
+      params.merge!({"set_filter" => "1",
+                     "sort"=>"id:desc",
+                     "f"=>["status_id", "closed_on", ""],
+                     "op"=>{"status_id"=>"c", "closed_on"=>"><"},
+                     "c"=>["status", "subject", "spent_hours"],
+                     "group_by"=>"closed_on_date",
+                     "t"=>["spent_hours", ""]})
+      d = Date.parse params[:group_name]
+      date_begin = d.beginning_of_month.to_date.to_s
+      date_end = d.end_of_month.to_date.to_s
+      params.merge!({"v"=>{"closed_on"=>[date_begin, date_end]}})
+    else
+      params.merge!({"set_filter" => "1", "sort"=>"id:desc", "f"=>["status_id", ""],
+                     "op"=>{"status_id"=>"c"}, "c"=>["status", "subject", "spent_hours"],
+                     "group_by"=>"closed_on_date", "t"=>["spent_hours", ""]})
+    end
     retrieve_query
     sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
