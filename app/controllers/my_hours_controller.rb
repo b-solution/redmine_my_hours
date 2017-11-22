@@ -25,7 +25,7 @@ class MyHoursController < ApplicationController
   accept_api_auth :index, :show, :create, :update, :destroy
 
   def index
-
+    old_query = session[:query]
     hash = {
         "set_filter" => "1",
         "sort"=>"id:desc",
@@ -87,7 +87,7 @@ class MyHoursController < ApplicationController
                               :offset => @offset,
                               :limit => @limit)
       @issue_count_by_group = @query.issue_count_by_group
-
+      session[:query] = old_query
       respond_to do |format|
         format.html { }
         format.api  {
