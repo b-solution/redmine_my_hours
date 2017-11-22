@@ -26,23 +26,37 @@ class MyHoursController < ApplicationController
 
   def index
 
-
+    hash = {
+        "set_filter" => "1",
+        "sort"=>"id:desc",
+        "c"=>["status", "subject", "spent_hours"],
+        "group_by"=>"closed_on_date",
+        "t"=>["spent_hours", ""]
+    }
     if params[:group_name]
-      params.merge!({"set_filter" => "1",
-                     "sort"=>"id:desc",
-                     "f"=>["status_id", "closed_on", ""],
-                     "op"=>{"status_id"=>"c", "closed_on"=>"><"},
-                     "c"=>["status", "subject", "spent_hours"],
-                     "group_by"=>"closed_on_date",
-                     "t"=>["spent_hours", ""]})
+      hash.merge!({
+                      "f"=>["status_id", "tracker_id", "closed_on", ""],
+                      "op"=>{"status_id"=>"c", "closed_on"=>"><", "tracker_id"=>"!"}
+                  })
       d = Date.parse params[:group_name]
       date_begin = d.beginning_of_month.to_date.to_s
       date_end = d.end_of_month.to_date.to_s
-      params.merge!({"v"=>{"closed_on"=>[date_begin, date_end]}})
+      hash.merge!({
+                      "v"=>{
+                          "closed_on"=>[date_begin, date_end],
+                          "tracker_id"=>["1"]
+                      }
+                  })
+      params.merge!(hash)
     else
-      params.merge!({"set_filter" => "1", "sort"=>"id:desc", "f"=>["status_id", ""],
-                     "op"=>{"status_id"=>"c"}, "c"=>["status", "subject", "spent_hours"],
-                     "group_by"=>"closed_on_date", "t"=>["spent_hours", ""]})
+      hash.merge!({
+                     "f"=>["status_id", "tracker_id", ""],
+                     "op"=>{"status_id"=>"c", "tracker_id"=>"!"},
+                     "v"=>{
+                         "tracker_id"=>["1"]
+                     }
+                 })
+      params.merge!(hash)
     end
     retrieve_query
     sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
@@ -81,7 +95,9 @@ class MyHoursController < ApplicationController
         }
         format.atom { render_feed(@issues, :title => "#{@project || Setting.app_title}: #{l(:label_issue_plural)}") }
         format.csv  { send_data(query_to_csv(@issues, @query, params[:csv]), :type => 'text/csv; header=present', :filename => 'issues.csv') }
-        format.pdf  { send_file_headers! :type => 'application/pdf', :filename => 'closed_issues.pdf' }
+        format.pdf  {
+          d = Date.parse params[:group_name]
+          send_file_headers! :type => 'application/pdf', :filename => "#{@project.name}_#{d.strftime('%B')}_#{d.strftime('%Y')}.pdf" }
       end
     else
       respond_to do |format|
