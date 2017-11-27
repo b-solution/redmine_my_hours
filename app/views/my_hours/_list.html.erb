@@ -20,13 +20,17 @@
                 <tr class="group open">
                   <td colspan="<%= query.inline_columns.size - 1  %>">
                     <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
-                    <span class="name"><%= Date.parse(group_name).strftime('%B %Y') %></span> <span class="count"><%= group_count %></span> <span class="totals"><%= group_totals %></span>
+                    <span class="name"><%= Date.parse(group_name).strftime('%B %Y') rescue group_name %></span> <span class="count"><%= group_count %></span> <span class="totals"><%= group_totals %></span>
                     <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}",
                                          "toggleAllRowGroups(this)", :class => 'toggle-all') %>
                   </td>
                   <td  >
                     <% other_formats_links do |f| %>
-                        <%= f.link_to 'PDF', :url => params.merge({group_name: group_name}) %>
+                        <% if @project %>
+                            <%= f.link_to 'PDF', :url => params.merge({group_name: group_name}) %>
+                            <% else %>
+                            <%= f.link_to 'PDF', :url => params.merge({project_id: issue.project.identifier, group_name: issue.closed_on_date, action: 'index' }) %>
+                        <% end %>
                     <% end %>
                   </td>
                 </tr>
