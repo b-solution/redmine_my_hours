@@ -9,11 +9,8 @@ Redmine::Plugin.register :redmine_my_hours do
   project_module :my_hours do
     permission :view_my_hours, :my_hours => [:index]
   end
-  menu :top_menu, :my_hours, {:controller => 'my_hours', :action => 'overview' },
-       caption: :my_hours,
-       :if => Proc.new {
-         User.current.admin?
-       }
+  menu :admin_menu, :billing_hours, {:controller => 'my_hours', :action => 'overview' },
+       caption: :billing_hours
 
   menu :project_menu, :my_hours, {:controller => 'my_hours', :action => 'index' },
        caption: :my_hours,

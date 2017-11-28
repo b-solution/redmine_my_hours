@@ -8,6 +8,15 @@
 <% html_title(@query.new_record? ? l(:label_issue_plural) : @query.name) %>
 
 <%= error_messages_for 'query' %>
+<%= form_tag params, method: :get do %>
+    <% closed_on = Issue.where.not(closed_on_date: nil).pluck(:closed_on_date).uniq.map(&:presence).compact.map{|d| [Date.parse(d).strftime('%B %Y'), d] rescue ''   } %>
+    <%= select_tag :date, options_for_select(closed_on, selected: (params[:date])) %>
+    <script>
+      $('#date').on('change', function(){
+        $(this).parents('form').submit();
+      })
+    </script>
+<% end %>
 <% if @query.valid? %>
     <% if @issues.empty? %>
         <p class="nodata"><%= l(:label_no_data) %></p>

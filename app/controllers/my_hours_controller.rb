@@ -126,7 +126,7 @@ class MyHoursController < ApplicationController
                     "f"=>["status_id", "tracker_id", "closed_on", ""],
                     "op"=>{"status_id"=>"c", "closed_on"=>"><", "tracker_id"=>"!"}
                 })
-    d = Date.today.prev_month
+    d = Date.parse(params[:date]) rescue Date.today.prev_month
     date_begin = d.beginning_of_month.to_date.to_s
     date_end = d.end_of_month.to_date.to_s
     hash.merge!({
