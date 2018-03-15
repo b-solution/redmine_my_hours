@@ -176,7 +176,7 @@ class MyHoursController < ApplicationController
         format.atom { render_feed(@issues, :title => "#{@project || Setting.app_title}: #{l(:label_issue_plural)}") }
         format.csv  { send_data(query_to_csv(@issues, @query, params[:csv]), :type => 'text/csv; header=present', :filename => 'issues.csv') }
         format.pdf  {
-          d = Date.parse params[:group_name]
+          d = Date.parse params[:group_name] || params[:date]
           send_file_headers! :type => 'application/pdf', :filename => "#{@project.name}_#{d.strftime('%B')}_#{d.strftime('%Y')}.pdf" }
       end
     else
