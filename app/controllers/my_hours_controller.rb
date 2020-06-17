@@ -31,8 +31,8 @@ class MyHoursController < ApplicationController
     hash = {
         "set_filter" => "1",
         "sort"=>"id:desc",
-        "c"=>["status", "subject", "spent_hours"],
-        "group_by"=>"closed_on_date",
+        "c"=>["status", 'tracker', "subject", "spent_hours"],
+        "group_by"=>"#{ params[:date] && params[:date].length > 5 ? 'closed_on_date' : 'closed_on_year' }",
         "t"=>["spent_hours", ""]
     }
     if params[:group_name]
@@ -118,7 +118,7 @@ class MyHoursController < ApplicationController
     hash = {
         "set_filter" => "1",
         "sort"=>"id:desc",
-        "c"=>["status", "subject", "spent_hours"],
+        "c"=>["status", 'tracker',  "subject", "spent_hours"],
         "group_by"=>"project",
         "t"=>["spent_hours", ""]
     }

@@ -12,7 +12,8 @@
 <%= error_messages_for 'query' %>
 <%= form_tag params, method: :get do %>
     <% closed_on = Issue.where.not(closed_on_date: nil).order('closed_on_date DESC').pluck(:closed_on_date).uniq.map(&:presence).compact.map{|d| [Date.parse(d).strftime('%B %Y'), d] rescue ''   } %>
-    <%= select_tag :date, options_for_select(closed_on, selected: (params[:date])), include_blank: true %>
+    <% closed_on_year = Issue.where.not(closed_on_date: nil).order('closed_on_year DESC').pluck(:closed_on_year).uniq.map(&:presence).compact.uniq %>
+    <%= select_tag :date, options_for_select(closed_on_year + closed_on, selected: (params[:date])), include_blank: true %>
     <script>
       $('#date').on('change', function(){
         $(this).parents('form').submit();

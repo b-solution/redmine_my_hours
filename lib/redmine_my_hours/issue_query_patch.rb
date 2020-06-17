@@ -17,6 +17,7 @@ module  RedmineMyHours
       if @available_columns.blank?
         @available_columns = available_columns_without_my_hours
         @available_columns << QueryColumn.new(:closed_on_date, :sortable => "(#{Issue.table_name}.closed_on_date)", :default_order => 'desc', :groupable => true)
+        @available_columns << QueryColumn.new(:closed_on_year, :sortable => "(#{Issue.table_name}.closed_on_year)", :default_order => 'desc', :groupable => true)
       else
         available_columns_without_my_hours
       end

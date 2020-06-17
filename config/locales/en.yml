@@ -2,4 +2,6 @@
 en:
   my_hours: My hours
   field_closed_on_date: Closed on
+  field_closed_on_year: "Closed on (Year) "
   billing_hours: Billing Hours
+  label_billing_hour_plural: Billing hours

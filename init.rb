@@ -2,7 +2,7 @@ Redmine::Plugin.register :redmine_my_hours do
   name 'Redmine My Hours plugin'
   author 'Bilel kedidi'
   description 'This is a plugin for Redmine'
-  version '0.0.1'
+  version '0.0.2'
   url 'http://www.github.com/bilel-kedidi/redmine_my_hours'
   author_url 'http://github.com/bilel-kedidi'
 
