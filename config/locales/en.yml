@@ -1,6 +1,6 @@
 # English strings go here for Rails i18n
 en:
-  my_hours: My hours
+  my_hours: Completed Tickets
   field_closed_on_date: Closed on
   field_closed_on_year: "Closed on (Year) "
   billing_hours: Billing Hours
